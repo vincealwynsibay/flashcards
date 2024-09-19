@@ -18,7 +18,6 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { useUser } from "@clerk/nextjs";
-import pb from "@/utils/pocketbase";
 
 const deckSchema = z.object({
   name: z.string().min(2).max(50),
@@ -38,11 +37,8 @@ function DeckForm() {
 
   async function onSubmit(values: z.infer<typeof deckSchema>) {
     console.log(values, user!.id);
-    await pb.collection("decks").create({
-      name: values.name,
-      description: values.description,
-    });
   }
+
   return (
     <div>
       <Form {...form}>

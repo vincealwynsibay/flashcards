@@ -1,10 +1,12 @@
 import DeckForm from "@/components/DeckForm";
-import pb from "@/utils/pocketbase";
 import { SignedIn } from "@clerk/nextjs";
+import { supabase } from "./lib/supabase";
 
 export default async function Home() {
-  const decks = await pb.collection("users").getFullList();
-  console.log(decks);
+
+  const { data: users } = await supabase.from("users").select();
+  console.log("nice");
+  console.log("users", users);
   return (
     <div>
       <SignedIn>
