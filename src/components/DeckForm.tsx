@@ -17,26 +17,20 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { useUser } from "@clerk/nextjs";
-
-const deckSchema = z.object({
-  name: z.string().min(2).max(50),
-  description: z.string().max(500),
-});
+import { addDeck } from "@/lib/actions/deck.action";
+import { DeckValidator } from "@/lib/validators/deck";
 
 function DeckForm() {
-  const form = useForm<z.infer<typeof deckSchema>>({
-    resolver: zodResolver(deckSchema),
+  const form = useForm<z.infer<typeof DeckValidator>>({
+    resolver: zodResolver(DeckValidator),
     defaultValues: {
       name: "",
       description: "",
     },
   });
 
-  const { user } = useUser();
-
-  async function onSubmit(values: z.infer<typeof deckSchema>) {
-    console.log(values, user!.id);
+  async function onSubmit(values: z.infer<typeof DeckValidator>) {
+    addDeck(values);
   }
 
   return (

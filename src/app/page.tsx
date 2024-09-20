@@ -1,17 +1,25 @@
 import DeckForm from "@/components/DeckForm";
-import { SignedIn } from "@clerk/nextjs";
-import { supabase } from "./lib/supabase";
+import { createClerkSupabaseClientSsr } from "./client";
 
 export default async function Home() {
+  const client = createClerkSupabaseClientSsr();
 
-  const { data: users } = await supabase.from("users").select();
-  console.log("nice");
-  console.log("users", users);
+  // Query the 'tasks' table to render the list of tasks
+  const { data, error } = await client.from("deck").select();
+  if (error) {
+    throw error;
+  }
+  const decks = data;
+
   return (
     <div>
-      <SignedIn>
-        <DeckForm />
-      </SignedIn>
+      <h1>Decks</h1>
+      <div>
+        {decks?.map((deck) => (
+          <p key={deck.id}>{deck.name}</p>
+        ))}
+      </div>
+      <DeckForm />
     </div>
   );
 }
