@@ -6,3 +6,4 @@ export const DeckValidator = z.object({
 })
 
 export type CreateDeckPayload = z.infer<typeof DeckValidator>;
+export type UpdateDeckPayload = z.infer<typeof DeckValidator>;
