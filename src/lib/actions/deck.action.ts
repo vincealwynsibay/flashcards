@@ -5,14 +5,22 @@ import { CreateDeckPayload, UpdateDeckPayload } from "../validators/deck";
 
 
 export async function addDeck(deckPayload: CreateDeckPayload) {
+    console.log(deckPayload);
     const client = createClerkSupabaseClientSsr()
     try {
-        const response = await client.from('deck').insert({
+        const {data} = await client.from('deck').insert({
           name: deckPayload.name,
-            description: deckPayload.description
-        });
+        description: deckPayload.description
+        }).select().single();
+
+        await client.from('flashcard').insert(deckPayload.flashcards.map(flashcard => ({
+            deck_id: data.id,
+            front: flashcard.front,
+            back: flashcard.back
+        }))).select();
     
-        console.log('Deck successfully added!', response)
+        console.log('Deck successfully added!', data)
+        return data;
       } catch (err) {
         console.error(err);
         throw new Error('Failed to add Deck');
