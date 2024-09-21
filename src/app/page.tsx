@@ -1,5 +1,6 @@
 import DeckForm from "@/components/DeckForm";
 import { createClerkSupabaseClientSsr } from "./client";
+import Link from "next/link";
 
 export default async function Home() {
   const client = createClerkSupabaseClientSsr();
@@ -16,7 +17,9 @@ export default async function Home() {
       <h1>Decks</h1>
       <div>
         {decks?.map((deck) => (
-          <p key={deck.id}>{deck.name}</p>
+          <Link href={`/deck/${deck.id}`} key={deck.id}>
+            <p>{deck.name}</p>
+          </Link>
         ))}
       </div>
       <DeckForm />

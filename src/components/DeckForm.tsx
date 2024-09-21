@@ -19,8 +19,10 @@ import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { addDeck } from "@/lib/actions/deck.action";
 import { DeckValidator } from "@/lib/validators/deck";
+import { useRouter } from "next/navigation";
 
 function DeckForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof DeckValidator>>({
     resolver: zodResolver(DeckValidator),
     defaultValues: {
@@ -30,7 +32,10 @@ function DeckForm() {
   });
 
   async function onSubmit(values: z.infer<typeof DeckValidator>) {
-    addDeck(values);
+    addDeck(values).then(() => {
+      router.refresh();
+      form.reset();
+    });
   }
 
   return (
